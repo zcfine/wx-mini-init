@@ -82,6 +82,7 @@ App({
       }
     });
   },
+  // 提示
   showErrorModal: function (content, title) {
     wx.showModal({
       title: title || '温馨提示',
