@@ -45,11 +45,15 @@ Page({
   },
   getUserInfo: function(e) {
     console.log(e);
-    console.log(app);
-    app.globalData.userInfo = e.detail.userInfo
-    this.setData({
-      userInfo: e.detail.userInfo,
-      hasUserInfo: true
-    })
+    // console.log(app);
+    if (e.detail.userInfo){
+      app.getUser();
+      app.globalData.userInfo = e.detail.userInfo;
+      this.setData({
+        userInfo: e.detail.userInfo,
+        hasUserInfo: true
+      })
+    }
+    
   }
 })

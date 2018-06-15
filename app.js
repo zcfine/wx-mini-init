@@ -21,6 +21,8 @@ App({
     var logs = wx.getStorageSync('logs') || []
     logs.unshift(Date.now())
     wx.setStorageSync('logs', logs)
+
+    // this.getUserInfo();
   },
   /**
    * 生命周期函数--监听小程序显示
@@ -28,6 +30,7 @@ App({
    */
   onShow: function (options) {
     //唤起登录
+    this.getUserInfo();
     if (!wx.getStorageSync('token')){
       this.getUser();
     }
@@ -35,32 +38,38 @@ App({
   //登录
   getUser: function(){
     let self = this;
-    wx.login({
+    wx.getSetting({
       success: res => {
-        console.log(res);
-        if(res.code){
-          // 通过返回的code发起请求，传给后端
-          login(basePath,res).then(res => {
-            //保存token
-            // console.log(res);
-            if (res.success){
-              // wx.setStorageSync('token', res.data.token);
-              console.log(" ========== 请求登录成功 ========== ");
-              console.log(self.globalData);
-              if (!self.globalData.userInfo) {
-                self.getUserInfo();
+        if (res.authSetting['scope.userInfo']) {
+          wx.login({
+            success: res => {
+              console.log(res);
+              if (res.code) {
+                // 通过返回的code发起请求，传给后端
+                login(basePath, res).then(res => {
+                  //保存token
+                  // console.log(res);
+                  if (res.success) {
+                    // wx.setStorageSync('token', res.data.token);
+                    console.log(" ========== 请求登录成功 ========== ");
+                    console.log(self.globalData);
+                    // if (!self.globalData.userInfo) {
+                    //   self.getUserInfo();
+                    // }
+                  } else {
+                    self.showErrorModal("登录失败");
+                    console.log(res.msg);
+                  }
+                }).catch(function (e) {
+                  console.log(e);
+                  self.showErrorModal("服务器请求超时");
+                });
               }
-            }else{
-              self.showErrorModal("未获取用户信息");
-              console.log(self.globalData);
             }
-          }).catch(function (e) {
-            console.log(e);
-            self.showErrorModal("服务器请求超时");
-          });
+          })
         }
       }
-    })
+    });
   },
   // 获取用户信息
   getUserInfo: function(){
