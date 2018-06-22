@@ -1,0 +1,15 @@
+<!--components/authorize.wxml-->
+<view wx:if="{{!hasUserInfo && canIUse}}" class='ad-container'>
+  <view class='ad-logo'>
+    <image src='../../images/logo.jpg'></image>
+    <text>zcfine</text>
+  </view>
+  <view class='ad-content'>
+    <text>获取你的公开信息（昵称、头像等），用于网页内个人信息显示</text>
+    <text>拒绝授权网页将无法进行</text>
+    <button 
+      type="primary" 
+      open-type="getUserInfo"
+      bindgetuserinfo="getUserInfo"> 微信授权 </button>
+  </view>
+</view>
